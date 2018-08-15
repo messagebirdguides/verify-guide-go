@@ -1,0 +1,9 @@
+{{ define "yield" }}
+  {{ if .Success }}
+    <h1>Done!</h1>
+    <p>You have successfully verified your phone number.</p>
+  {{ else }}
+    <h1>Error</h1>
+    <p>Something went wrong. Please try again</p>
+  {{ end }}
+{{ end }}
