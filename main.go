@@ -6,12 +6,13 @@ import (
 	"net/http"
 
 	"github.com/messagebird/go-rest-api"
+	"github.com/messagebird/go-rest-api/verify"
 )
 
 // Global, because we need to share this with the handler functions
 var (
 	client       *messagebird.Client
-	clientVerify *messagebird.Verify
+	clientVerify *verify.Verify
 )
 
 // RenderDefaultTemplate takes:
@@ -40,7 +41,7 @@ func step2(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 	num := r.FormValue("number")
-	clientVerify, err = client.NewVerify(num, nil)
+	clientVerify, err = verify.Create(client, num, nil)
 	if err != nil {
 		log.Println(err)
 	}
@@ -50,7 +51,7 @@ func step2(w http.ResponseWriter, r *http.Request) {
 func step3(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	token := r.FormValue("token")
-	clientVerifyDone, err := client.VerifyToken(clientVerify.ID, token)
+	clientVerifyDone, err := verify.VerifyToken(client, clientVerify.ID, token)
 	if err != nil {
 		log.Println(err)
 	}
@@ -70,7 +71,7 @@ func step3(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	client = messagebird.New("<your-api-key-here>")
+	client = messagebird.New("<enter-your-api-key>")
 
 	// Routes
 	http.HandleFunc("/", step1)
